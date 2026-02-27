@@ -25,7 +25,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
-                <div className="container mx-auto">{children}</div>
+                <main>
+                    <div className="container mx-auto">{children}</div>
+                </main>
             </body>
         </html>
     );
