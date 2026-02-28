@@ -3,9 +3,9 @@ import { Skeleton } from '@/components';
 const Loading = () => {
     return (
         <>
-            <Skeleton className="w-2xs h-20 rounded-2xl mb-5" />
-            <Skeleton className="w-2xs h-20 rounded-2xl mb-2" />
-            <Skeleton className="w-2xs h-20 rounded-2xl" />
+            <Skeleton className="w-full h-50 rounded-2xl mb-4" />
+            <Skeleton className="w-full h-50 rounded-2xl mb-4" />
+            <Skeleton className="w-full h-50 rounded-2xl" />
         </>
     );
 };

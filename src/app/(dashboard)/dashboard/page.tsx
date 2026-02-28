@@ -1,61 +1,44 @@
 'use client';
 
-import { Button, Input, Separator } from '@/components';
-import { useStudentsStore } from '@/app/api/students/useStudentsStore';
+import { LessonCard } from '@/components';
 import { useEffect, useState } from 'react';
+import { getLessons } from './actions';
+import { LessonData } from '@/types/lessonData';
+import Loading from './loading';
+import Link from 'next/link';
 
 const DashboardPage = () => {
-    const { students, fetchStudents, addStudent, removeStudent } = useStudentsStore();
-
-    const [firstName, setFirstName] = useState('');
-    const [subject, setSubject] = useState('');
+    const [lessonsArr, setLessonsArr] = useState<LessonData[]>([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        fetchStudents();
-    }, [fetchStudents]);
+        const asyncSelectLessons = async () => {
+            setLoading(true);
+            const res = await getLessons();
 
-    const handleAdd = () => {
-        if (!firstName || !subject) return;
+            if (res.error) {
+                console.error(res.error.message);
+                return res.error.message;
+            }
 
-        addStudent({
-            id: crypto.randomUUID(),
-            firstName,
-            email: `${firstName}@mail.com`,
-            subject,
-            createdAt: new Date().toLocaleDateString(),
-            gender: 'Unset',
-        });
-
-        setFirstName('');
-        setSubject('');
-    };
+            setLoading(false);
+            setLessonsArr(res.data ?? []);
+        };
+        asyncSelectLessons();
+    }, []);
 
     return (
         <div className="mt-10 p-5 grid gap-4 border border-neutral-800 rounded-2xl w-screen max-w-2xl justify-self-center">
             <h1 className="text-2xl mb-2">Dashboard</h1>
 
-            <Input placeholder="Student name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-
-            <Input placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
-
-            <Button onClick={handleAdd}>Add student</Button>
-
-            {students.map((student) => (
-                <div key={student.id} className="p-5 grid gap-2 border border-neutral-800 rounded-2xl">
-                    <h3>Firstname - {student.firstName}</h3>
-                    <Separator />
-                    <p>Gender - {student.gender}</p>
-                    <Separator />
-                    <p>Mail - {student.email}</p>
-                    <Separator />
-                    <p>Added date - {student.createdAt}</p>
-                    <Separator />
-
-                    <Button variant={'destructive'} onClick={() => removeStudent(student.id)}>
-                        Delete
-                    </Button>
-                </div>
+            {lessonsArr.map((lesson) => (
+                <Link href={`/dashboard/lesson/${lesson.id}`} key={lesson.id}>
+                    <LessonCard title={lesson.title} description={lesson.description} created_at={lesson.created_at} />
+                </Link>
             ))}
+
+            {!lessonsArr.length && !loading && <p>Your Dashboard is empty</p>}
+            {!lessonsArr.length && loading && <Loading />}
         </div>
     );
 };

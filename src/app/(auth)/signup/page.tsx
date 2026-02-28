@@ -42,10 +42,13 @@ export default function SignupPage() {
         }
     };
 
+    const allInputsIsEmpty =
+        email.trim() === '' || password.trim() === '' || firstname.trim() === '' || lastname.trim() === '';
+
     return (
         <section className="flex flex-col gap-2 justify-center items-center h-screen">
             <h1>Sign up</h1>
-            <form className="flex flex-col gap-2 max-w-125 border border-neutral-800 p-8 rounded-2xl overflow-hidden">
+            <form className="flex flex-col gap-2 w-full max-w-125 border border-neutral-800 p-8 rounded-2xl overflow-hidden">
                 <Input
                     autoComplete="name"
                     placeholder="firstname"
@@ -92,7 +95,7 @@ export default function SignupPage() {
                     ))}
                 </RadioGroup>
 
-                <Button type="button" disabled={email.trim() === '' || password.trim() === ''} onClick={signupHandler}>
+                <Button type="button" disabled={allInputsIsEmpty} onClick={signupHandler}>
                     Sign up
                 </Button>
                 <LoginGoogleButton />

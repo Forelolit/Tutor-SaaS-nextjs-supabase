@@ -1,18 +1,24 @@
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 
-export const LessonCard = () => {
+interface LessonProps {
+    title: string;
+    description: string | null;
+    created_at: string;
+}
+
+export const LessonCard = ({ title, description, created_at }: LessonProps) => {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
+                <CardTitle>{title}</CardTitle>
+                <CardDescription>{description}</CardDescription>
                 <CardAction>Card Action</CardAction>
             </CardHeader>
             <CardContent>
                 <p>Card Content</p>
             </CardContent>
             <CardFooter>
-                <p>Card Footer</p>
+                <p>{created_at}</p>
             </CardFooter>
         </Card>
     );

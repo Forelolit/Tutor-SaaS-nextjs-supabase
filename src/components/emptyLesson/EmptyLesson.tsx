@@ -1,5 +1,6 @@
 import { Button, Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components';
 import { ArrowUpRightIcon, BookMarked } from 'lucide-react';
+import Link from 'next/link';
 
 export const EmptyLesson = () => {
     return (
@@ -14,12 +15,14 @@ export const EmptyLesson = () => {
                 </EmptyDescription>
             </EmptyHeader>
             <EmptyContent className="flex-row justify-center gap-2">
-                <Button>Create Project</Button>
+                <Link href={'/dashboard'}>
+                    <Button>Create Project</Button>
+                </Link>
             </EmptyContent>
             <Button variant="link" asChild className="text-muted-foreground" size="sm">
-                <a href="#">
+                <Link href={'#'}>
                     Learn More <ArrowUpRightIcon />
-                </a>
+                </Link>
             </Button>
         </Empty>
     );
