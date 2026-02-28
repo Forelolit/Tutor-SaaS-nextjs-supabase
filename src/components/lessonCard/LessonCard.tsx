@@ -11,14 +11,14 @@ export const LessonCard = ({ title, description, created_at }: LessonProps) => {
         <Card>
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
+                <CardDescription>Description: {description}</CardDescription>
                 <CardAction>Card Action</CardAction>
             </CardHeader>
             <CardContent>
                 <p>Card Content</p>
             </CardContent>
             <CardFooter>
-                <p>{created_at}</p>
+                <p>Created: {created_at}</p>
             </CardFooter>
         </Card>
     );

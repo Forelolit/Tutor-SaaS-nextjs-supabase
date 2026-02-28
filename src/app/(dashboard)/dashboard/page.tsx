@@ -2,43 +2,44 @@
 
 import { LessonCard } from '@/components';
 import { useEffect, useState } from 'react';
-import { getLessons } from './actions';
-import { LessonData } from '@/types/lessonData';
 import Loading from './loading';
 import Link from 'next/link';
+import { loadLessons } from '@/app/api/lessons/route';
+import { useLessonsStore } from '@/app/api/lessons/useLessonsStore';
 
 const DashboardPage = () => {
-    const [lessonsArr, setLessonsArr] = useState<LessonData[]>([]);
+    const lessons = useLessonsStore((state) => state.lessons);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const asyncSelectLessons = async () => {
             setLoading(true);
-            const res = await getLessons();
-
-            if (res.error) {
-                console.error(res.error.message);
-                return res.error.message;
-            }
-
+            await loadLessons();
             setLoading(false);
-            setLessonsArr(res.data ?? []);
         };
         asyncSelectLessons();
     }, []);
 
     return (
-        <div className="mt-10 p-5 grid gap-4 border border-neutral-800 rounded-2xl w-screen max-w-2xl justify-self-center">
+        <div className="mt-10 p-5 grid gap-4 border border-neutral-800 rounded-2xl">
             <h1 className="text-2xl mb-2">Dashboard</h1>
 
-            {lessonsArr.map((lesson) => (
-                <Link href={`/dashboard/lesson/${lesson.id}`} key={lesson.id}>
-                    <LessonCard title={lesson.title} description={lesson.description} created_at={lesson.created_at} />
-                </Link>
-            ))}
+            {lessons?.length !== 0 && <h2>My lessons:</h2>}
 
-            {!lessonsArr.length && !loading && <p>Your Dashboard is empty</p>}
-            {!lessonsArr.length && loading && <Loading />}
+            <div className="grid grid-cols-3 gap-4">
+                {lessons?.map((lesson) => (
+                    <Link href={`/dashboard/lesson/${lesson.id}`} key={lesson.id}>
+                        <LessonCard
+                            title={lesson.title}
+                            description={lesson.description}
+                            created_at={lesson.created_at}
+                        />
+                    </Link>
+                ))}
+            </div>
+
+            {!lessons?.length && !loading && <p>Your Dashboard is empty</p>}
+            {!lessons?.length && loading && <Loading />}
         </div>
     );
 };
