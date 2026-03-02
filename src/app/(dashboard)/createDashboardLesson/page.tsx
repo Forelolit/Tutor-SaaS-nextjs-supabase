@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Input, Label } from '@/components';
-import { useUserStore } from '@/app/api/user/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { createLesson } from './actions';
 import { useState } from 'react';
 
@@ -30,12 +30,12 @@ const CreateDashboardLesson = () => {
     };
 
     return (
-        <div className="flex flex-col gap-2 justify-center items-center h-screen">
+        <div className="flex flex-col gap-2 justify-center items-center h-[80vh]">
             <h1>Create your lesson</h1>
             <form className="flex flex-col gap-2 w-full max-w-125 border border-neutral-800 p-8 rounded-2xl overflow-hidden">
                 <Input placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)} />
-                <Input placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)} />
                 <Label>Description is optional</Label>
+                <Input placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)} />
                 <Button type="button" onClick={createHandler} disabled={title.trim() === ''}>
                     Create lesson
                 </Button>

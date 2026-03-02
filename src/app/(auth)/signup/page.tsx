@@ -8,6 +8,7 @@ import {
     FieldDescription,
     FieldLabel,
     Input,
+    Label,
     RadioGroup,
     RadioGroupItem,
 } from '@/components';
@@ -42,37 +43,37 @@ export default function SignupPage() {
         }
     };
 
-    const allInputsIsEmpty =
-        email.trim() === '' || password.trim() === '' || firstname.trim() === '' || lastname.trim() === '';
+    const RequiredInputsIsEmpty = email.trim() === '' || password.trim() === '' || firstname.trim() === '';
 
     return (
         <section className="flex flex-col gap-2 justify-center items-center h-screen">
             <h1>Sign up</h1>
             <form className="flex flex-col gap-2 w-full max-w-125 border border-neutral-800 p-8 rounded-2xl overflow-hidden">
+                <Label>First name is required</Label>
                 <Input
                     autoComplete="name"
-                    placeholder="firstname"
+                    placeholder="First name"
                     value={firstname}
                     onChange={(e) => setFirstname(e.target.value)}
                 />
-
+                <Label>Last name is optional</Label>
                 <Input
                     autoComplete="name"
-                    placeholder="lastname"
+                    placeholder="Last name"
                     value={lastname}
                     onChange={(e) => setLastname(e.target.value)}
                 />
-
+                <Label>Email is required</Label>
                 <Input
                     autoComplete="email"
-                    placeholder="email"
+                    placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-
+                <Label>Password is required</Label>
                 <Input
                     autoComplete="current-password"
-                    placeholder="password"
+                    placeholder="Password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -95,7 +96,7 @@ export default function SignupPage() {
                     ))}
                 </RadioGroup>
 
-                <Button type="button" disabled={allInputsIsEmpty} onClick={signupHandler}>
+                <Button type="button" disabled={RequiredInputsIsEmpty} onClick={signupHandler}>
                     Sign up
                 </Button>
                 <LoginGoogleButton />

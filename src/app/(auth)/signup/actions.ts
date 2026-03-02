@@ -1,4 +1,4 @@
-import { putUserInStore } from '@/app/api/user/route';
+import { putUserInStore } from '@/lib/services/user.service';
 import { supabase } from '@/lib/supabase/client';
 
 export const signup = async (first_name: string, last_name: string, email: string, role: string, password: string) => {
@@ -19,4 +19,13 @@ export const signup = async (first_name: string, last_name: string, email: strin
     }
 
     return { data, error };
+};
+
+export const googleSignIn = async () => {
+    await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: 'http://localhost:3000',
+        },
+    });
 };

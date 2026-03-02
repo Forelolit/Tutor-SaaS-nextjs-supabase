@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { useUserStore } from '../api/user/useUserStore';
+import { useUserStore } from '@/stores/index';
 import { Skeleton } from '@/components';
 
 export default function Instruments() {

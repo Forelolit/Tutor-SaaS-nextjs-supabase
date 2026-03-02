@@ -1,8 +1,8 @@
 'use client';
 
 import { supabase } from '@/lib/supabase/client';
-import { useUserStore } from './useUserStore';
-import { Database } from '@/types/database';
+import { useUserStore } from '@/stores/user/useUserStore';
+import { Database } from '@/types/database.types';
 
 type User = Database['public']['Tables']['profiles']['Row'];
 

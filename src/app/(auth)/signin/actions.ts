@@ -1,4 +1,4 @@
-import { putUserInStore } from '@/app/api/user/route';
+import { putUserInStore } from '@/lib/services/user.service';
 import { supabase } from '@/lib/supabase/client';
 
 export const signin = async (email: string, password: string) => {

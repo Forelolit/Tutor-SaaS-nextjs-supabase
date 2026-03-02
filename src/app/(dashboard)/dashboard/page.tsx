@@ -1,11 +1,11 @@
 'use client';
 
-import { LessonCard } from '@/components';
+import { Button, LessonCard } from '@/components';
 import { useEffect, useState } from 'react';
 import Loading from './loading';
 import Link from 'next/link';
-import { loadLessons } from '@/app/api/lessons/route';
-import { useLessonsStore } from '@/app/api/lessons/useLessonsStore';
+import { loadLessons } from '@/lib/services/lessons.service';
+import { useLessonsStore } from '@/stores/lessons/useLessonsStore';
 
 const DashboardPage = () => {
     const lessons = useLessonsStore((state) => state.lessons);
@@ -22,7 +22,12 @@ const DashboardPage = () => {
 
     return (
         <div className="mt-10 p-5 grid gap-4 border border-neutral-800 rounded-2xl">
-            <h1 className="text-2xl mb-2">Dashboard</h1>
+            <div className="flex gap-10 items-center">
+                <h1 className="text-2xl mb-2">Dashboard</h1>
+                <Link href={'createDashboardLesson'}>
+                    <Button>Create lesson</Button>
+                </Link>
+            </div>
 
             {lessons?.length !== 0 && <h2>My lessons:</h2>}
 

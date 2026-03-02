@@ -1,17 +1,12 @@
 'use client';
 
 import { Button } from '@/components';
-import { supabase } from '@/lib/supabase/client';
+import { googleSignIn } from './actions';
 
 export default function LoginGoogleButton() {
-    const login = async () => {
-        await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: 'http://localhost:3000',
-            },
-        });
+    const signInHandler = async () => {
+        await googleSignIn();
     };
 
-    return <Button onClick={login}>Login with Google</Button>;
+    return <Button onClick={signInHandler}>Login with Google</Button>;
 }

@@ -11,3 +11,4 @@ export * from './ui/field';
 
 export { EmptyLesson } from './emptyLesson/EmptyLesson';
 export { LessonCard } from './lessonCard/LessonCard';
+export { Header } from './header/Header';

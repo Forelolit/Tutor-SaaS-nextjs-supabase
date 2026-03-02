@@ -2,25 +2,6 @@ import { supabase } from '@/lib/supabase/client';
 import { LessonDataWithTaskData } from '@/types/lessonDataWithTasksData';
 import { TaskData } from '@/types/taskData';
 
-// interface GetLessonsResponseById {
-//     data: LessonData | null;
-//     error: Error | null;
-// }
-
-// export const getLessonById = async (lessonId: string): Promise<GetLessonsResponseById> => {
-//     const { data, error } = await supabase.from('lessons').select('*').eq('id', lessonId).single();
-
-//     if (error) {
-//         console.error(error);
-//     }
-
-//     if (data === null || undefined) {
-//         console.error('Data not provided', error?.message);
-//     }
-
-//     return { data, error };
-// };
-
 export interface GetLessonsByIdWithTasks {
     data: LessonDataWithTaskData | null;
     error: Error | null;
@@ -67,16 +48,3 @@ export const createTask = async (
 
     return { data, error };
 };
-
-// interface FetchTaskResponse {
-//     data: TaskData[];
-//     error: Error | null;
-// }
-
-// export const getTasksByLesson = async (lessonId: string): Promise<FetchTaskResponse> => {
-//     const { data, error } = await supabase.from('tasks').select('*').eq('lesson_id', lessonId);
-
-//     if (error) throw error.message;
-
-//     return { data, error };
-// };

@@ -1,15 +1,15 @@
 'use client';
 
-import { Separator } from '@/components';
-import { EmptyLesson } from '@/components/emptyLesson/EmptyLesson';
-import { LessonCard } from '@/components/lessonCard/LessonCard';
+import { EmptyLesson, LessonCard, Separator } from '@/components/index';
 import { useEffect } from 'react';
-import { loadLessons } from './api/lessons/route';
-import { useLessonsStore } from './api/lessons/useLessonsStore';
+import { loadLessons } from '@/lib/services/lessons.service';
+import { useLessonsStore, useUserStore } from '@/stores/index';
 import Link from 'next/link';
 
 export default function Home() {
     const lessons = useLessonsStore((state) => state.lessons);
+    const isAuth = useUserStore((state) => state.isAuth);
+    const role = useUserStore((state) => state.user?.role);
 
     useEffect(() => {
         loadLessons();
@@ -19,7 +19,17 @@ export default function Home() {
         <section>
             <h1>Main page</h1>
 
-            {lessons?.length === 0 && <EmptyLesson />}
+            {isAuth && role === 'teacher' && lessons?.length === 0 && <EmptyLesson />}
+            {isAuth && role === 'student' && lessons?.length === 0 && (
+                <div className="text-center">
+                    <h2>You need to get an invite to the lesson first</h2>
+                </div>
+            )}
+            {!isAuth && (
+                <div className="text-center">
+                    <h2>Sign in to use the app</h2>
+                </div>
+            )}
 
             {lessons?.length !== 0 && <Separator className="my-10" />}
 

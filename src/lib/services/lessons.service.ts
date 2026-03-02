@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase/client';
-import { useLessonsStore } from './useLessonsStore';
+import { useLessonsStore } from '@/stores/lessons/useLessonsStore';
 
 export const loadLessons = async () => {
     const lessons = useLessonsStore.getState().lessons;
