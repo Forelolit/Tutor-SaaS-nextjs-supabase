@@ -1,7 +1,6 @@
 'use client';
 
-import Profile from '@/app/profile/page';
-import { Separator } from '@/components';
+import { Profile, Separator } from '@/components';
 import { useLessonsStore, useUserStore } from '@/stores';
 import Link from 'next/link';
 
