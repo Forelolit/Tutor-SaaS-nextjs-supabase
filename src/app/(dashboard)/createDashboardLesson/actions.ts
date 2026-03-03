@@ -3,12 +3,12 @@ import { LessonData } from '@/types/lessonData';
 
 type LessonDataArgs = Pick<LessonData, 'title' | 'description' | 'owner_id'>;
 
-interface SelectLessonsResponse {
+interface createLessonResponse {
     data: LessonData[] | null;
     error: Error | null;
 }
 
-export const createLesson = async (lessonData: LessonDataArgs): Promise<SelectLessonsResponse> => {
+export const createLesson = async (lessonData: LessonDataArgs): Promise<createLessonResponse> => {
     const { data, error } = await supabase
         .from('lessons')
         .insert([

@@ -1,10 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { Button, Input, Label } from '@/components';
 import { createTask } from './action';
-import { useState } from 'react';
 
-const CreateTaskForm = ({ lessonId }: { lessonId?: string }) => {
+export const CreateTaskForm = ({ lessonId }: { lessonId?: string }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
@@ -24,9 +24,8 @@ const CreateTaskForm = ({ lessonId }: { lessonId?: string }) => {
     };
 
     return (
-        <>
-            <h4 className="">Create task form</h4>
-            <form className="w-full max-w-100">
+        <div className="border border-neutral-800 p-8 rounded-2xl overflow-hidden w-full max-w-125 ">
+            <form className="flex flex-col gap-2">
                 <Label>Title is required</Label>
                 <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <Label>Description is optional</Label>
@@ -35,8 +34,6 @@ const CreateTaskForm = ({ lessonId }: { lessonId?: string }) => {
                     Create
                 </Button>
             </form>
-        </>
+        </div>
     );
 };
-
-export default CreateTaskForm;

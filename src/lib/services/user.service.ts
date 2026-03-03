@@ -1,32 +1,13 @@
-'use client';
-
 import { supabase } from '@/lib/supabase/client';
 import { useUserStore } from '@/stores/user/useUserStore';
-import { Database } from '@/types/database.types';
-
-type User = Database['public']['Tables']['profiles']['Row'];
-
-type Session = {
-    access_token: string;
-    refresh_token: string;
-    expires_in: number;
-    expires_at?: number;
-    token_type: string;
-    user: User;
-};
 
 export const putUserInStore = async () => {
-    const raw = localStorage.getItem('sb-ntpexdrrhqzhhnibdrgp-auth-token');
-    const session: Session | null = raw ? JSON.parse(raw) : null;
-
-    if (session === null) {
-        return console.error('Session is null');
-    }
+    const { data } = await supabase.auth.getUser();
 
     const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', session.user.id)
+        .eq('id', data.user?.id)
         .single();
 
     if (profileError) throw profileError;

@@ -6,9 +6,11 @@ import Loading from './loading';
 import Link from 'next/link';
 import { loadLessons } from '@/lib/services/lessons.service';
 import { useLessonsStore } from '@/stores/lessons/useLessonsStore';
+import { useUserStore } from '@/stores';
 
 const DashboardPage = () => {
     const lessons = useLessonsStore((state) => state.lessons);
+    const isAuth = useUserStore((state) => state.isAuth);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -27,21 +29,26 @@ const DashboardPage = () => {
                 <Link href={'createDashboardLesson'}>
                     <Button>Create lesson</Button>
                 </Link>
+                <Link href={'dashboard/inviteStudent'}>
+                    <Button variant={'outline'}>Invite student</Button>
+                </Link>
             </div>
 
             {lessons?.length !== 0 && <h2>My lessons:</h2>}
 
-            <div className="grid grid-cols-3 gap-4">
-                {lessons?.map((lesson) => (
-                    <Link href={`/dashboard/lesson/${lesson.id}`} key={lesson.id}>
-                        <LessonCard
-                            title={lesson.title}
-                            description={lesson.description}
-                            created_at={lesson.created_at}
-                        />
-                    </Link>
-                ))}
-            </div>
+            {isAuth && (
+                <div className="grid grid-cols-3 gap-4">
+                    {lessons?.map((lesson) => (
+                        <Link href={`/dashboard/lesson/${lesson.id}`} key={lesson.id}>
+                            <LessonCard
+                                title={lesson.title}
+                                description={lesson.description}
+                                created_at={lesson.created_at}
+                            />
+                        </Link>
+                    ))}
+                </div>
+            )}
 
             {!lessons?.length && !loading && <p>Your Dashboard is empty</p>}
             {!lessons?.length && loading && <Loading />}

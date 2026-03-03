@@ -20,6 +20,7 @@ export default function Home() {
             <h1>Main page</h1>
 
             {isAuth && role === 'teacher' && lessons?.length === 0 && <EmptyLesson />}
+
             {isAuth && role === 'student' && lessons?.length === 0 && (
                 <div className="text-center">
                     <h2>You need to get an invite to the lesson first</h2>
@@ -31,21 +32,23 @@ export default function Home() {
                 </div>
             )}
 
-            {lessons?.length !== 0 && <Separator className="my-10" />}
+            {isAuth && lessons?.length !== 0 && <Separator className="my-10" />}
 
-            <div className="grid grid-cols-3 gap-4">
-                {lessons?.map((lesson) => (
-                    <Link href={`/dashboard/lesson/${lesson.id}`} key={lesson.id}>
-                        <LessonCard
-                            created_at={lesson.created_at}
-                            description={lesson.description}
-                            title={lesson.title}
-                        />
-                    </Link>
-                ))}
-            </div>
+            {isAuth && (
+                <div className="grid grid-cols-3 gap-4">
+                    {lessons?.map((lesson) => (
+                        <Link href={`/dashboard/lesson/${lesson.id}`} key={lesson.id}>
+                            <LessonCard
+                                created_at={lesson.created_at}
+                                description={lesson.description}
+                                title={lesson.title}
+                            />
+                        </Link>
+                    ))}
+                </div>
+            )}
 
-            {lessons?.length !== 0 && <Separator className="my-10" />}
+            {isAuth && lessons?.length !== 0 && <Separator className="my-10" />}
         </section>
     );
 }
