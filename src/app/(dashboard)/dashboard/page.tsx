@@ -1,26 +1,13 @@
 'use client';
 
 import { Button, LessonCard } from '@/components';
-import { useEffect, useState } from 'react';
-import Loading from './loading';
 import Link from 'next/link';
-import { loadLessons } from '@/lib/services/lessons.service';
 import { useLessonsStore } from '@/stores/lessons/useLessonsStore';
 import { useUserStore } from '@/stores';
 
 const DashboardPage = () => {
     const lessons = useLessonsStore((state) => state.lessons);
     const isAuth = useUserStore((state) => state.isAuth);
-    const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        const asyncSelectLessons = async () => {
-            setLoading(true);
-            await loadLessons();
-            setLoading(false);
-        };
-        asyncSelectLessons();
-    }, []);
 
     return (
         <div className="mt-10 p-5 grid gap-4 border border-neutral-800 rounded-2xl">
@@ -50,8 +37,7 @@ const DashboardPage = () => {
                 </div>
             )}
 
-            {!lessons?.length && !loading && <p>Your Dashboard is empty</p>}
-            {!lessons?.length && loading && <Loading />}
+            {lessons?.length === 0 && <p>Your Dashboard is empty</p>}
         </div>
     );
 };

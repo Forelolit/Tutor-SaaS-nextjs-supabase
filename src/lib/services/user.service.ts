@@ -1,13 +1,14 @@
 import { supabase } from '@/lib/supabase/client';
 import { useUserStore } from '@/stores/user/useUserStore';
+import { getCurrentUser } from '../helper/getCurrentUser';
 
 export const putUserInStore = async () => {
-    const { data } = await supabase.auth.getUser();
+    const user = await getCurrentUser();
 
     const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', data.user?.id)
+        .eq('id', user.id)
         .single();
 
     if (profileError) throw profileError;

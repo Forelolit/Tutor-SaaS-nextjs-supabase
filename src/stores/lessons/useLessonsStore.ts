@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 
 interface LessonsStore {
     lessons: LessonData[] | null;
-    setLessons: (lessons: LessonData[]) => void;
+    setLessons: (lessons: LessonsStore['lessons']) => void;
     clearLessons: () => void;
 }
 
@@ -15,7 +15,7 @@ export const useLessonsStore = create<LessonsStore>()(
             setLessons: (lessons) => set({ lessons }),
             clearLessons: () =>
                 set({
-                    lessons: null,
+                    lessons: [],
                 }),
         }),
         { name: 'tutor_saas_lessons' },
