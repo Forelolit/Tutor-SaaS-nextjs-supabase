@@ -8,6 +8,10 @@ export * from './ui/card';
 export { RadioGroup, RadioGroupItem } from './ui/radio-group';
 export { Label } from './ui/label';
 export * from './ui/field';
+export * from './ui/dropdown-menu';
+export * from './ui/table';
+export * from './ui/pagination';
+export { Checkbox } from './ui/checkbox';
 
 export { EmptyLesson } from './emptyLesson/EmptyLesson';
 export { LessonCard } from './lessonCard/LessonCard';

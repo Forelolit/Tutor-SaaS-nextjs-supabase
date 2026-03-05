@@ -24,10 +24,10 @@ export default function Home() {
                 </div>
             )}
 
-            {isAuth && role === 'student' && invites?.length && (
+            {isAuth && role === 'student' && invites?.length !== 0 && (
                 <div>
                     <h2 className="text-center">
-                        You have {invites.length} {invites.length <= 1 ? 'invite' : 'invites'} to a lesson
+                        You have {invites?.length} {invites?.length === 1 ? 'invite' : 'invites'} to a lesson
                     </h2>
 
                     <div className="grid grid-cols-4 gap-5">
