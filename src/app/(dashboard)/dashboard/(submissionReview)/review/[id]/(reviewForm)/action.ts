@@ -1,9 +1,8 @@
 import { supabase } from '@/lib/supabase/client';
-import { Database } from '@/types/database.types';
-import { teacher_submissions_view } from '@/types/submissonViews';
+import { SubmittionStatus, TaskSubmissionsData } from '@/types/taskSubmittionsData';
 
 interface GradeSubmittionResponse {
-    data: teacher_submissions_view | null;
+    data: TaskSubmissionsData | null;
     error: Error | null;
 }
 
@@ -11,7 +10,7 @@ export const gradeSubmittion = async (
     id: string,
     grade: string | null,
     feedback: string,
-    status: Database['public']['Enums']['submission_status'],
+    status: SubmittionStatus,
 ): Promise<GradeSubmittionResponse> => {
     const updateData: Record<string, unknown> = {
         feedback,
