@@ -1,13 +1,14 @@
 import { getCurrentUser } from '@/lib/helpers/getCurrentUser';
 import { supabase } from '@/lib/supabase/client';
 import { InviteData } from '@/types/inviteData';
+import { LessonStudentsData } from '@/types/lessonStudentsData';
 
-interface AcceptInviteResponse {
-    data: InviteData | null;
+interface InviteResponse {
+    data: LessonStudentsData | null;
     error: Error | null;
 }
 
-export const acceptInvite = async (token: string): Promise<AcceptInviteResponse> => {
+export const acceptInvite = async (token: string): Promise<InviteResponse> => {
     const { data: invite, error } = await supabase
         .from('lesson_invites')
         .select('*')
@@ -15,9 +16,9 @@ export const acceptInvite = async (token: string): Promise<AcceptInviteResponse>
         .is('used_at', null)
         .single();
 
-    if (error) {
-        console.error(error.message);
-        return { data: null, error };
+    if (error || !invite) {
+        console.error(error?.message || 'Invite not found or already used');
+        return { data: null, error: error ?? new Error('Invite not found or already used') };
     }
 
     const { error: updateError } = await supabase
@@ -30,21 +31,21 @@ export const acceptInvite = async (token: string): Promise<AcceptInviteResponse>
         return { data: null, error: updateError };
     }
 
-    if (invite) {
-        const res = await insertToLesson(invite);
-        return { ...res };
+    const insertResult = await insertToLesson(invite);
+
+    if (insertResult.error) {
+        return { data: null, error: insertResult.error };
     }
 
-    return { data: null, error };
+    return { data: insertResult.data, error: null };
 };
 
-interface InsertInviteResponse {
-    data: InviteData | null;
-    error: Error | null;
-}
-
-const insertToLesson = async (invite: InviteData): Promise<InsertInviteResponse> => {
+const insertToLesson = async (invite: InviteData): Promise<InviteResponse> => {
     const user = await getCurrentUser();
+
+    if (!user) {
+        return { data: null, error: new Error('User not logged in') };
+    }
 
     const { data, error } = await supabase
         .from('lesson_students')

@@ -41,7 +41,9 @@ export const getLessonStudents = async (lesson_id: string): Promise<UserData[] |
         return null;
     }
 
-    if (!lessonStudents || lessonStudents.length === 0) return [];
+    if (!lessonStudents || lessonStudents.length === 0) {
+        return [];
+    }
 
     const usersPromises = lessonStudents.map(async ({ student_id }) => {
         const { data, error } = await supabase.from('profiles').select('*').eq('id', student_id).single();
@@ -50,10 +52,11 @@ export const getLessonStudents = async (lesson_id: string): Promise<UserData[] |
             console.error(error.message);
             return null;
         }
+
         return data;
     });
 
     const users = await Promise.all(usersPromises);
 
-    return users.filter((user: UserData) => user !== null);
+    return users.filter((user): user is UserData => user !== null);
 };

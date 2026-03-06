@@ -11,6 +11,10 @@ interface initInvitesListenerResponse {
 export const initInvitesListener = async (): Promise<initInvitesListenerResponse> => {
     const user = await getCurrentUser();
 
+    if (!user.email) {
+        return { data: null, error: new Error('User email not provided') };
+    }
+
     const { data, error } = await supabase
         .from('lesson_invites')
         .select('*')

@@ -4,7 +4,7 @@ import { Button, Input, Label } from '@/components';
 import { useState } from 'react';
 import { createInvite } from './action';
 
-export const InviteStudentForm = ({ lessonId }: { lessonId: string | undefined }) => {
+export const InviteStudentForm = ({ lessonId }: { lessonId: string }) => {
     const [email, setEmail] = useState('');
     const sendInvite = async () => {
         const res = await createInvite(lessonId, email);

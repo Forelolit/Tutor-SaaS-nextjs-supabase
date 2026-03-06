@@ -7,7 +7,7 @@ interface CreateInviteResponse {
     error: Error | null;
 }
 
-export const createInvite = async (lessonId: string | undefined, email: string): Promise<CreateInviteResponse> => {
+export const createInvite = async (lessonId: string, email: string): Promise<CreateInviteResponse> => {
     const user = await getCurrentUser();
 
     const { data, error } = await supabase
