@@ -89,36 +89,8 @@ Security
 # Project Architecture
 
 The project uses a layered architecture:
-src
-├── app
-│ ├── (auth)
-│ ├── (dashboard)
-│ ├── instruments
-│ ├── profile
-│ ├── providers
-│ ├── layout.tsx
-│ └── page.tsx
-│
-├── components
-│ ├── emptyLesson
-│ ├── header
-│ ├── inviteCard
-│ ├── lessonCard
-│ ├── profile
-│ └── ui
-│
-├── lib
-│ ├── helper
-│ ├── services
-│ ├── supabase
-│ └── utils.ts
-│
-├── stores
-│ ├── invites
-│ ├── lessons
-│ └── user
-│
-└── types 
+<img width="296" height="847" alt="image" src="https://github.com/user-attachments/assets/47e7a8a6-0cd8-4564-ba36-362389b6b85d" />
+
 ---
 
 # State Management
