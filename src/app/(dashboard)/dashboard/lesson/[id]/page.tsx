@@ -2,13 +2,14 @@
 
 import { use, useEffect, useState } from 'react';
 import { getLessonStudents, getLessonWithTasks } from './action';
-import { Card, CardContent, CardHeader, CardTitle, Separator, Spinner } from '@/components';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, Separator, Spinner } from '@/components';
 import { LessonDataWithTaskData } from '@/types/lessonDataWithTasksData';
 import { InviteStudentForm } from './(inviteStudent)/InviteStudentForm';
 import { CreateTaskForm } from './(createTask)/createTaskForm';
 import { useUserStore } from '@/stores';
 import { UserData } from '@/types/userData';
 import { LessonStudentsTable } from './(lessonStudentsTable)/LessonStudentsTable';
+import { StudentsSubmissionForm } from './(taskSubmission)/(submissionForms)/StudentsSubmissionForm';
 
 const LessonDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = use(params);
@@ -100,6 +101,14 @@ const LessonDetail = ({ params }: { params: Promise<{ id: string }> }) => {
                                         <p className="text-muted-foreground">{task.description}</p>
                                         <p className="text-xs text-muted-foreground">{task.created_at}</p>
                                     </CardContent>
+                                    {role === 'student' && (
+                                        <>
+                                            <Separator />
+                                            <CardFooter>
+                                                <StudentsSubmissionForm taskId={task.id} />
+                                            </CardFooter>
+                                        </>
+                                    )}
                                 </Card>
                             ))}
                         </div>

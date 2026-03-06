@@ -1,26 +1,23 @@
 'use client';
 
-import { Profile, Separator } from '@/components';
-import { useLessonsStore, useUserStore } from '@/stores';
+import { Profile } from '@/components';
+import { useUserStore } from '@/stores';
 import Link from 'next/link';
 
 export const Header = () => {
-    const lessons = useLessonsStore((state) => state.lessons);
     const isAuth = useUserStore((state) => state.isAuth);
-    const role = useUserStore((state) => state.user?.role);
 
     return (
-        <header>
+        <header className="border py-2">
             <div className="container mx-auto flex justify-between items-center">
                 <Link href={'/'}>
                     <h2>
                         Tutor SaaS <small>in development</small>
                     </h2>
                 </Link>
-                {isAuth && role === 'teacher' && lessons?.length && <Link href={'/dashboard'}>To dashboard</Link>}
+                {isAuth && <Link href={'/dashboard'}>Dashboard</Link>}
                 <Profile />
             </div>
-            <Separator />
         </header>
     );
 };

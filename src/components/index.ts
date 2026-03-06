@@ -12,6 +12,10 @@ export * from './ui/dropdown-menu';
 export * from './ui/table';
 export * from './ui/pagination';
 export { Checkbox } from './ui/checkbox';
+export * from './ui/select';
+export { Badge } from './ui/badge';
+export { Textarea } from './ui/textarea';
+export * from './ui/avatar';
 
 export { EmptyLesson } from './emptyLesson/EmptyLesson';
 export { LessonCard } from './lessonCard/LessonCard';

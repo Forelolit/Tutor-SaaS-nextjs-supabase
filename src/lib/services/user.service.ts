@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase/client';
 import { useUserStore } from '@/stores/user/useUserStore';
-import { getCurrentUser } from '../helper/getCurrentUser';
+import { getCurrentUser } from '../helpers/getCurrentUser';
 
 export const putUserInStore = async () => {
     const user = await getCurrentUser();

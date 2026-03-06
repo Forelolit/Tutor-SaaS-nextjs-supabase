@@ -32,6 +32,9 @@ export default function RootLayout({
                     <LessonsProvider>
                         <Header />
                         <main className="container mx-auto">{children}</main>
+                        <footer>
+                            <p className="text-center my-8">All rights reserved ©</p>
+                        </footer>
                     </LessonsProvider>
                 </InvitesProvider>
             </body>

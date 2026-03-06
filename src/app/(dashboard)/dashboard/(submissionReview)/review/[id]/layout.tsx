@@ -1,10 +1,10 @@
+import { Spinner } from '@/components';
 import { Suspense } from 'react';
-import Loading from './loading';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
-        <section className="mt-10">
-            <Suspense fallback={<Loading />}>{children}</Suspense>
+        <section>
+            <Suspense fallback={<Spinner className="size-10" />}>{children}</Suspense>
         </section>
     );
 }

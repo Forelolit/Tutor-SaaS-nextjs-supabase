@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase/client';
-import { getCurrentUser } from '@/lib/helper/getCurrentUser';
+import { getCurrentUser } from '@/lib/helpers/getCurrentUser';
 import { InviteData } from '@/types/inviteData';
 import { useInvitesStore } from '@/stores/invites/useInvitesStore';
 
