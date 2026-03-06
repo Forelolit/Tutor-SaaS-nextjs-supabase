@@ -1,9 +1,9 @@
 import { getCurrentUser } from '@/lib/helpers/getCurrentUser';
 import { supabase } from '@/lib/supabase/client';
-import { SubmissionData } from '@/types/submissonData';
+import { student_submissions_view } from '@/types/submissonViews';
 
 interface CreateSubmissionResponse {
-    data: SubmissionData | null;
+    data: student_submissions_view | null;
     error: Error | null;
 }
 
