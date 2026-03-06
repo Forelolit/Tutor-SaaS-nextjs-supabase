@@ -1,36 +1,196 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Learning Platform (Teacher / Student)
 
-## Getting Started
+A small educational platform where teachers can create lessons, assign tasks, and invite students.  
+Students receive invitations, join lessons, and submit solutions for tasks.
 
-First, run the development server:
+The project is built as a modern React/Next.js application with Supabase as the backend.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Overview
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This application allows teachers to manage lessons and tasks while students can join lessons and submit their work.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Main idea of the system:
 
-## Learn More
+Teacher
+- creates lessons
+- creates tasks inside lessons
+- invites students
+- review students tasks
 
-To learn more about Next.js, take a look at the following resources:
+Student
+- receives invitation
+- joins lesson
+- sees assigned tasks
+- submits solutions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The goal of the project is to build a simple and clean MVP of a learning platform.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+# Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Frontend
+- Next.js (App Router)
+- TypeScript
+- Zustand (state management)
+- TanStack Query (server state)
+- ShadCn / UI components
+- React Hook Form
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Backend
+- Supabase
+- PostgreSQL
+- Row Level Security (RLS)
+- Supabase Auth
+
+Other
+- Vercel (deployment)
+- GitHub (repository)
+
+---
+
+# Features
+
+Authentication
+- user registration and login
+- role selection (teacher / student)
+
+Lessons
+- teachers can create lessons
+- lessons store title, description and owner
+
+Invitations
+- teacher can invite students via email
+- student receives invitation and joins lesson
+
+Students in Lesson
+- teacher can see students in a lesson
+- students only see their own UI
+
+Tasks
+- teacher can create tasks for a lesson
+- tasks contain title and description
+
+Task Submissions
+- students submit their solutions
+- each submission is connected to:
+  - task
+  - student
+
+Security
+- Supabase RLS policies
+- students can only see their own submissions
+- teachers can see all lesson data
+
+---
+
+# Project Architecture
+
+The project uses a layered architecture:
+src
+├── app
+│ ├── (auth)
+│ ├── (dashboard)
+│ ├── instruments
+│ ├── profile
+│ ├── providers
+│ ├── layout.tsx
+│ └── page.tsx
+│
+├── components
+│ ├── emptyLesson
+│ ├── header
+│ ├── inviteCard
+│ ├── lessonCard
+│ ├── profile
+│ └── ui
+│
+├── lib
+│ ├── helper
+│ ├── services
+│ ├── supabase
+│ └── utils.ts
+│
+├── stores
+│ ├── invites
+│ ├── lessons
+│ └── user
+│
+└── types 
+---
+
+# State Management
+
+Client state is handled with:
+
+Zustand
+
+Used for:
+- user state
+- lessons state
+- invites state
+
+Server state is handled with:
+
+TanStack Query
+
+Used for:
+- fetching lessons
+- fetching tasks
+- fetching submissions
+- caching API requests
+
+---
+
+# Database (Supabase)
+
+Main tables:
+
+profiles  
+application users
+
+lessons  
+lessons created by teachers
+
+lesson_invites
+recieve invites via email
+
+lesson_students  
+relation between lessons and students
+
+tasks  
+tasks inside lessons
+
+task_submissions  
+student submissions for tasks
+
+
+Views are used to simplify queries and combine related data.
+
+---
+
+# Deployment
+
+The application is deployed using:
+
+Vercel
+
+---
+
+# Future Improvements
+
+Possible improvements for the project:
+
+- real-time updates
+- comments on submissions
+- notifications
+- file uploads
+- lesson analytics
+
+---
+
+# Author
+
+Forelolit
