@@ -1,9 +1,10 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Geist_Mono, Inter } from 'next/font/google';
-import { Header } from '@/components/index';
+import { Header, Toaster } from '@/components/index';
 import { InvitesProvider } from './providers/InvitesProvider';
 import { LessonsProvider } from './providers/LessonsProvider';
+import Providers from './providers/QueryClientProvider';
 
 const inter = Inter({
     variable: '--font-inter',
@@ -28,15 +29,26 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
-                <InvitesProvider>
-                    <LessonsProvider>
-                        <Header />
-                        <main className="container mx-auto">{children}</main>
-                        <footer>
-                            <p className="text-center my-8">All rights reserved ©</p>
-                        </footer>
-                    </LessonsProvider>
-                </InvitesProvider>
+                <Providers>
+                    <InvitesProvider>
+                        <LessonsProvider>
+                            <Header />
+                            <main className="max-w-325 mx-auto">{children}</main>
+                            <footer>
+                                <p className="text-center my-8">All rights reserved ©</p>
+                            </footer>
+                        </LessonsProvider>
+                    </InvitesProvider>
+                    <Toaster
+                        toastOptions={{
+                            classNames: {
+                                error: '!bg-red-500 !text-white !border-red-700',
+                                success: '!bg-green-500 !text-white !border-green-700',
+                                info: '!bg-blue-500 !text-white !border-blue-700',
+                            },
+                        }}
+                    />
+                </Providers>
             </body>
         </html>
     );

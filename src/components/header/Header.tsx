@@ -9,7 +9,7 @@ export const Header = () => {
 
     return (
         <header className="border py-2">
-            <div className="container mx-auto flex justify-between items-center">
+            <div className="max-w-325 mx-auto flex justify-between items-center">
                 <Link href={'/'}>
                     <h2>
                         Tutor SaaS <small>in development</small>

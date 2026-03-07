@@ -1,32 +1,29 @@
 'use client';
 
-import { Button, Input, Label } from '@/components';
-import { useUserStore } from '@/stores/user/useUserStore';
-import { createLesson } from './actions';
+import { Button, Input, Label, Spinner } from '@/components';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+import { createLesson } from './actions';
 
 const CreateDashboardLesson = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [error, setError] = useState('');
 
-    const userId = useUserStore((state) => state.user?.id);
+    const { mutate, isPending } = useMutation({
+        mutationFn: createLesson,
+        onSuccess: () => {
+            toast.info('Lesson created!');
+        },
+    });
 
-    const createHandler = async () => {
-        const res = await createLesson({
-            title: title,
-            description: description,
-            owner_id: userId ?? '',
+    const createHandler = () => {
+        mutate({
+            title,
+            description,
         });
-
-        if (res?.error) {
-            setError(error);
-        }
-
-        if (res?.data !== null || undefined) {
-            setTitle('');
-            setDescription('');
-        }
+        setTitle('');
+        setDescription('');
     };
 
     return (
@@ -36,11 +33,9 @@ const CreateDashboardLesson = () => {
                 <Input placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <Label>Description is optional</Label>
                 <Input placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                <Button type="button" onClick={createHandler} disabled={title.trim() === ''}>
-                    Create lesson
+                <Button type="button" onClick={createHandler} disabled={title.trim() === '' || isPending}>
+                    {isPending ? <Spinner /> : 'Create lesson'}
                 </Button>
-
-                {error && <p>{error}</p>}
             </form>
         </div>
     );

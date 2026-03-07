@@ -16,6 +16,7 @@ export * from './ui/select';
 export { Badge } from './ui/badge';
 export { Textarea } from './ui/textarea';
 export * from './ui/avatar';
+export { Toaster } from './ui/sonner';
 
 export { EmptyLesson } from './emptyLesson/EmptyLesson';
 export { LessonCard } from './lessonCard/LessonCard';

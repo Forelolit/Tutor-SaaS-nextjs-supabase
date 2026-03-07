@@ -48,7 +48,7 @@ const LessonDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     }, [id]);
 
     return (
-        <div className="container mx-auto py-8 space-y-8">
+        <div>
             {/* Page Header */}
             <div className="space-y-2">
                 <h1 className="text-3xl font-semibold tracking-tight">Lesson Detail</h1>
