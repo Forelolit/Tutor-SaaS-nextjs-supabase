@@ -12,6 +12,13 @@ export class UnauthorizedError extends AppError {
     }
 }
 
+export class UserAlreadyExistsError extends AppError {
+    constructor() {
+        super('User already exists');
+        this.name = 'UserAlreadyExistsError';
+    }
+}
+
 export class ForbiddenError extends AppError {
     constructor() {
         super('Forbidden');
@@ -40,9 +47,18 @@ export class NetworkError extends AppError {
     }
 }
 
-export class UnknownError extends AppError {
+export class ConstraintError extends AppError {
     constructor() {
+        super('Constraint error');
+        this.name = 'ConstraintError';
+    }
+}
+
+export class UnknownError extends AppError {
+    original?: unknown;
+
+    constructor(original?: unknown) {
         super('Unknown error');
-        this.name = 'UnknownError';
+        this.original = original;
     }
 }

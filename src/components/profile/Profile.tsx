@@ -46,8 +46,6 @@ export const Profile = () => {
                         </Link>
                     </div>
                 )}
-
-                {!isAuth && <h5>Guest</h5>}
             </div>
 
             {isAuth && <Button onClick={logOut}>Sign out</Button>}

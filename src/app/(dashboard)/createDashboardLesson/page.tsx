@@ -13,7 +13,7 @@ const CreateDashboardLesson = () => {
     const { mutate, isPending } = useMutation({
         mutationFn: createLesson,
         onSuccess: () => {
-            toast.info('Lesson created!');
+            toast.success('Lesson created!');
         },
     });
 
@@ -33,7 +33,7 @@ const CreateDashboardLesson = () => {
                 <Input placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <Label>Description is optional</Label>
                 <Input placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                <Button type="button" onClick={createHandler} disabled={title.trim() === '' || isPending}>
+                <Button type="button" disabled={title.trim() === '' || isPending} onClick={createHandler}>
                     {isPending ? <Spinner /> : 'Create lesson'}
                 </Button>
             </form>

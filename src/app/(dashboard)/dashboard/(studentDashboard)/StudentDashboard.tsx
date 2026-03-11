@@ -1,15 +1,32 @@
 import { LessonData } from '@/types/lessonData';
 import { StudentSubmissions } from './(studentSubmissions)/StudentSubmissions';
 import Link from 'next/link';
-import { Badge, Card, CardContent, LessonCard } from '@/components';
-import { useInvitesStore } from '@/stores/invites/useInvitesStore';
+import { Badge, Card, CardContent, LessonCard, Spinner } from '@/components';
 import { InviteCard } from '@/components/inviteCard/InviteCard';
+import { acceptInvite, useGetInvites } from './action';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export const StudentDashboard = ({ lessons }: { lessons: LessonData[] | null }) => {
-    const invites = useInvitesStore((state) => state.invites);
+    const { data: invites, isLoading: invitesLoading } = useGetInvites();
+
+    const { mutate } = useMutation({
+        mutationFn: acceptInvite,
+        onSuccess: () => {
+            toast.success('Invite accepted!');
+        },
+    });
+
+    const acceptHandler = (token: string) => {
+        mutate({ token });
+    };
+
+    const deleteHandler = (token: string) => {
+        toast(token);
+    };
 
     return (
-        <div className="grid grid-cols-[1fr_auto] gap-10">
+        <div className="grid grid-cols-2 gap-10">
             <div>
                 <div className="mb-5">
                     <div>
@@ -46,17 +63,23 @@ export const StudentDashboard = ({ lessons }: { lessons: LessonData[] | null }) 
                     </Card>
                 )}
 
-                {invites?.length !== 0 && (
+                {invitesLoading && <Spinner />}
+
+                {!invitesLoading && invites?.length !== 0 && (
                     <div>
-                        <h2 className="text-center">
+                        <h2>
                             You have {invites?.length} {invites?.length === 1 ? 'invite' : 'invites'} to a lesson
                         </h2>
 
-                        <div className="grid grid-cols-4 gap-5">
+                        <div className="grid grid-cols-2 gap-5">
                             {invites?.map((invite) => (
-                                <Link href={'/profile/invites'} key={invite.id}>
-                                    <InviteCard key={invite.id} invite={invite} />
-                                </Link>
+                                <InviteCard
+                                    key={invite.invite_id}
+                                    className="transition-transform hover:scale-[1.02]"
+                                    invite={invite}
+                                    acceptInvite={() => acceptHandler(invite.token ?? '')}
+                                    deleteInvite={() => deleteHandler(invite.token ?? '')}
+                                />
                             ))}
                         </div>
                     </div>

@@ -1,24 +1,33 @@
+import { dbQuery } from '@/lib/helpers/dbQuery';
 import { putUserInStore } from '@/lib/services/user.service';
 import { supabase } from '@/lib/supabase/client';
 
-export const signup = async (first_name: string, last_name: string, email: string, role: string, password: string) => {
-    const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-            data: {
-                first_name,
-                last_name,
-                role,
-            },
-        },
-    });
+interface userSignUpData {
+    firstname: string;
+    lastname: string;
+    email: string;
+    userRole: string;
+    password: string;
+}
 
-    if (data.session?.access_token !== '' || null) {
+export const signUp = async ({ firstname, lastname, email, userRole, password }: userSignUpData) => {
+    const data = await dbQuery(
+        supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    first_name: firstname,
+                    last_name: lastname,
+                    role: userRole,
+                },
+            },
+        }),
+    );
+
+    if (data.session.access_token !== '' || null) {
         putUserInStore();
     }
-
-    return { data, error };
 };
 
 export const googleSignIn = async () => {

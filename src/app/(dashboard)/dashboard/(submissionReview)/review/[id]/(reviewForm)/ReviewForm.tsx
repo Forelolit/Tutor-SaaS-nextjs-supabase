@@ -10,45 +10,42 @@ import {
     Input,
     Label,
     Separator,
+    Spinner,
     Textarea,
 } from '@/components';
 import { useState } from 'react';
 import { gradeSubmittion } from './action';
 import { redirect } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export const ReviewForm = ({ id }: { id: string }) => {
     const [grade, setGrade] = useState('');
     const [feedback, setFeedback] = useState('');
 
-    const submitHandler = async () => {
-        const res = await gradeSubmittion(id, grade, feedback, 'graded');
+    const { mutate, isPending } = useMutation({
+        mutationFn: gradeSubmittion,
+        onSuccess: (data) => {
+            if (data.status === 'graded') {
+                toast.success('Graded!');
+                redirect('/dashboard');
+            }
+            if (data.status === 'rejected') {
+                toast.success(`Rejected!`);
+                redirect('/dashboard');
+            }
+        },
+    });
 
-        if (res.error) {
-            console.error(res.error.message);
-            alert(res.error.message);
-        }
-        if (res.data) {
-            alert(
-                `Submittted. grade: ${res.data.grade}, feedback: ${res.data.feedback}, graded at: ${res.data.graded_at}`,
-            );
-            redirect('/dashboard');
-        }
+    const submitHandler = async () => {
+        mutate({ id, grade, feedback, status: 'graded' });
 
         setGrade('');
         setFeedback('');
     };
 
     const rejectHandler = async () => {
-        const res = await gradeSubmittion(id, null, feedback, 'rejected');
-
-        if (res.error) {
-            console.error(res.error.message);
-            alert(res.error.message);
-        }
-        if (res.data) {
-            alert(`Rejected. feedback: ${res.data.feedback}`);
-            redirect('/dashboard');
-        }
+        mutate({ id, grade: null, feedback, status: 'rejected' });
 
         setGrade('');
         setFeedback('');
@@ -80,7 +77,7 @@ export const ReviewForm = ({ id }: { id: string }) => {
                             id="feedback"
                             placeholder="Write feedback for the student"
                             value={feedback}
-                            onChange={(e) => setFeedback(e.target.value.trim())}
+                            onChange={(e) => setFeedback(e.target.value)}
                         />
                     </div>
 
@@ -90,21 +87,23 @@ export const ReviewForm = ({ id }: { id: string }) => {
                             <Button
                                 variant={'destructive'}
                                 type="button"
-                                disabled={feedback.trim() === ''}
+                                disabled={feedback.trim() === '' || isPending}
                                 onClick={rejectHandler}
                                 className="w-full">
-                                Reject review
+                                {isPending ? <Spinner /> : 'Reject review'}
                             </Button>
                         </div>
+
                         <Separator orientation="vertical" />
+
                         <div className="flex-1">
                             <Label className="mb-2">Required grade and feedback.</Label>
                             <Button
                                 type="button"
-                                disabled={grade.trim() === '' || feedback.trim() === ''}
+                                disabled={grade.trim() === '' || feedback.trim() === '' || isPending}
                                 onClick={submitHandler}
                                 className="w-full">
-                                Submit Review
+                                {isPending ? <Spinner /> : 'Submit Review'}
                             </Button>
                         </div>
                     </div>

@@ -1,30 +1,16 @@
 'use client';
 
-import { use, useEffect, useState } from 'react';
-import { getStudentSubmissionById } from './action';
-import { teacher_submissions_view } from '@/types/submissonViews';
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Separator } from '@/components';
+import { use } from 'react';
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Separator, Spinner } from '@/components';
 import { ReviewForm } from './(reviewForm)/ReviewForm';
+import { useGetTeacherSubmissionById } from './action';
+import { getCreatedAtSubDays } from '@/lib/helpers/getCreatedAtSubDays';
 
 const ReviewPage = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = use(params);
-    const [submission, setSubmission] = useState<teacher_submissions_view>();
+    const { data: submission, isLoading } = useGetTeacherSubmissionById(id);
 
-    useEffect(() => {
-        const asyncGetStudentSubmissionById = async () => {
-            const res = await getStudentSubmissionById(id);
-
-            if (res.error) {
-                console.error(res.error.message);
-                alert(res.error.message);
-            }
-
-            if (res.data) {
-                setSubmission(res.data);
-            }
-        };
-        asyncGetStudentSubmissionById();
-    }, [id]);
+    if (isLoading) <Spinner />;
 
     return (
         <div className="flex flex-col items-center justify-center gap-5 p-6">
@@ -41,32 +27,55 @@ const ReviewPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
                 <CardContent className="space-y-6">
                     <div className="space-y-2">
-                        <h3 className="text-sm font-semibold text-muted-foreground">Student</h3>
+                        <h4>Student</h4>
 
-                        <div className="flex gap-2 text-base font-medium">
-                            <span>First name: {submission?.student_first_name}</span>
-                            {submission?.student_last_name && <span>Last name: {submission?.student_last_name}</span>}
-                        </div>
+                        <p>
+                            First name:
+                            <span className="text-muted-foreground">{` ${submission?.student_first_name}`}</span>
+                        </p>
 
-                        <p className="text-sm text-muted-foreground">Submitted at: {submission?.submitted_at}</p>
+                        {submission?.student_last_name && (
+                            <p>
+                                Last name:
+                                <span className="text-muted-foreground">{` ${submission?.student_last_name}`}</span>
+                            </p>
+                        )}
+
+                        <p>
+                            Submitted:
+                            <span className="text-muted-foreground">{` ${getCreatedAtSubDays(
+                                submission?.submitted_at ?? '',
+                            )}`}</span>
+                        </p>
                     </div>
 
                     <Separator />
 
                     <div className="space-y-2">
-                        <h3 className="text-sm font-semibold text-muted-foreground">Task</h3>
+                        <h4>Task</h4>
 
-                        <p className="text-lg font-semibold">{submission?.task_title}</p>
+                        <p>
+                            Title:
+                            <span className="text-muted-foreground">{` ${submission?.task_title}`}</span>
+                        </p>
 
-                        <p className="text-sm text-muted-foreground">Created at: {submission?.task_created_at}</p>
+                        <p>
+                            Description:
+                            <span className="text-muted-foreground">{` ${submission?.task_description}`}</span>
+                        </p>
 
-                        <p className="text-sm leading-relaxed">{submission?.task_description}</p>
+                        <p>
+                            Created:
+                            <span className="text-muted-foreground">
+                                {` ${getCreatedAtSubDays(submission?.task_created_at ?? '')}`}
+                            </span>
+                        </p>
                     </div>
 
                     <Separator />
 
                     <div className="space-y-2">
-                        <h3 className="text-sm font-semibold text-muted-foreground">Student Answer</h3>
+                        <h3>Student Answer</h3>
 
                         <div className="rounded-md border bg-muted/30 p-4 text-sm leading-relaxed">
                             {submission?.content}

@@ -1,62 +1,61 @@
+import { dbQuery } from '@/lib/helpers/dbQuery';
 import { supabase } from '@/lib/supabase/client';
 import { LessonDataWithTaskData } from '@/types/lessonDataWithTasksData';
 import { LessonStudentsData } from '@/types/lessonStudentsData';
-import { UserData } from '@/types/userData';
+import { useQuery } from '@tanstack/react-query';
 
-export interface GetLessonsByIdWithTasks {
-    data: LessonDataWithTaskData | null;
-    error: Error | null;
-}
-
-export const getLessonWithTasks = async (lessonId: string): Promise<GetLessonsByIdWithTasks> => {
-    const { data, error } = await supabase
-        .from('lessons')
-        .select(
-            `
+export const getLessonWithTasks = async (lessonId: string): Promise<LessonDataWithTaskData> => {
+    return dbQuery(
+        supabase
+            .from('lessons')
+            .select(
+                `
         *,
         tasks (*)
         `,
-        )
-        .eq('id', lessonId)
-        .single();
-
-    if (error) throw error.message;
-
-    return { data, error };
+            )
+            .eq('id', lessonId)
+            .single(),
+    );
 };
 
-export interface GetLessonStudentsResponse {
-    data: LessonStudentsData[] | null;
-    error: Error | null;
+export const useGetLessonWithTasks = (lessonId: string) => {
+    return useQuery({
+        queryKey: ['lesson_detail', lessonId],
+        queryFn: () => getLessonWithTasks(lessonId),
+    });
+};
+
+interface studentData {
+    id: string;
+    first_name: string;
+    last_name: string;
 }
 
-export const getLessonStudents = async (lesson_id: string): Promise<UserData[] | null> => {
-    const { data: lessonStudents, error } = await supabase
-        .from('lesson_students')
-        .select('*')
-        .eq('lesson_id', lesson_id);
+export const getLessonStudents = async (lesson_id: string): Promise<studentData[]> => {
+    const lessonStudents = await dbQuery(supabase.from('lesson_students').select('*').eq('lesson_id', lesson_id));
 
-    if (error) {
-        console.error(error.message);
-        return null;
-    }
-
-    if (!lessonStudents || lessonStudents.length === 0) {
-        return [];
-    }
-
-    const usersPromises = lessonStudents.map(async ({ student_id }) => {
-        const { data, error } = await supabase.from('profiles').select('*').eq('id', student_id).single();
-
-        if (error) {
-            console.error(error.message);
-            return null;
-        }
-
-        return data;
+    const usersPromises = lessonStudents.map(async (data: LessonStudentsData) => {
+        const res = await dbQuery(
+            supabase.from('profiles').select('id, first_name, last_name').eq('id', data.student_id).single(),
+        );
+        return res;
     });
 
-    const users = await Promise.all(usersPromises);
+    const users = await Promise.all<studentData>(usersPromises);
 
-    return users.filter((user): user is UserData => user !== null);
+    return users.filter((user): user is studentData => user !== null);
+};
+
+export const useGetLessonStudents = (lesson_id: string) => {
+    return useQuery({
+        queryKey: ['lesson_students', lesson_id],
+        queryFn: async () => {
+            try {
+                return await getLessonStudents(lesson_id);
+            } catch (error) {
+                return null;
+            }
+        },
+    });
 };

@@ -1,28 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components';
-import { getStudentSubmission } from './action';
 import Link from 'next/link';
-import { teacher_submissions_view } from '@/types/submissonViews';
+import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Spinner } from '@/components';
+import { useGetTeacherSubmissions } from './action';
 import { getSubmissionStatus } from '@/lib/helpers/getSubmissionStatus';
+import { getCreatedAtSubDays } from '@/lib/helpers/getCreatedAtSubDays';
 
 export const ReviewPanel = () => {
-    const [submisson, setSubmission] = useState<teacher_submissions_view[]>([]);
+    const { data: submissions, isLoading } = useGetTeacherSubmissions();
 
-    useEffect(() => {
-        const asyncGetStudentSubmission = async () => {
-            const res = await getStudentSubmission();
-
-            if (res.error) {
-                alert(res.error.message);
-            }
-            if (res.data) {
-                setSubmission(res.data);
-            }
-        };
-        asyncGetStudentSubmission();
-    }, []);
+    if (isLoading) <Spinner />;
 
     return (
         <div className="grid gap-4">
@@ -31,16 +18,16 @@ export const ReviewPanel = () => {
 
                 <div className="flex gap-2">
                     <Badge variant={'secondary'}>
-                        {submisson.filter((s) => s.status === 'submitted').length} Submittions
+                        {submissions?.filter((s) => s.status === 'submitted').length} Submittions
                     </Badge>
                     <Badge variant={'destructive'}>
-                        {submisson.filter((s) => s.status === 'rejected').length} Rejected
+                        {submissions?.filter((s) => s.status === 'rejected').length} Rejected
                     </Badge>
-                    <Badge variant={'default'}>{submisson.filter((s) => s.status === 'graded').length} Graded</Badge>
+                    <Badge variant={'default'}>{submissions?.filter((s) => s.status === 'graded').length} Graded</Badge>
                 </div>
             </div>
 
-            {submisson
+            {submissions
                 ?.slice()
                 .reverse()
                 .map((s) => {
@@ -56,18 +43,37 @@ export const ReviewPanel = () => {
                                     </CardDescription>
                                 </div>
 
-                                <Badge variant={status.variant}>{status.label}</Badge>
+                                <div className="flex items-center gap-2">
+                                    <Badge variant={status.variant}>{status.label}</Badge>
+                                    {s.grade && <Badge>{s.grade}</Badge>}
+                                </div>
                             </CardHeader>
 
                             <CardContent className="space-y-4">
-                                <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
-                                    <span>
-                                        <span className="font-medium text-foreground">Student:</span>{' '}
-                                        {s.student_first_name} {s.student_last_name}
+                                <div>
+                                    <span className="font-medium">
+                                        From:
+                                        <span className="text-muted-foreground font-normal">{` ${s.lesson_title}`}</span>
+                                    </span>
+                                </div>
+
+                                <div className="flex flex-wrap gap-6 text-sm">
+                                    <span className="font-medium">
+                                        Student:
+                                        <span className="text-muted-foreground font-normal">
+                                            {` ${s.student_first_name} ${
+                                                s.student_last_name ? s.student_last_name : ''
+                                            }`}
+                                        </span>
                                     </span>
 
                                     <span>
-                                        <span className="font-medium text-foreground">Submitted:</span> {s.submitted_at}
+                                        <span className="font-medium">
+                                            Submitted:
+                                            <span className="text-muted-foreground font-normal">
+                                                {` ${getCreatedAtSubDays(s.submitted_at)}`}
+                                            </span>
+                                        </span>
                                     </span>
                                 </div>
 
@@ -77,10 +83,28 @@ export const ReviewPanel = () => {
                                     <div className="rounded-md border bg-muted/30 p-3 text-sm">{s.content}</div>
                                 </div>
 
+                                {s.feedback && (
+                                    <div className="space-y-2">
+                                        <p className="text-sm font-medium">Feedback</p>
+
+                                        <div className="rounded-md border bg-muted/30 p-3 text-sm">{s.feedback}</div>
+                                    </div>
+                                )}
+
                                 <div className="flex justify-end">
-                                    <Link href={s.status !== 'submitted' ? '#' : `/dashboard/review/${s.id}`}>
-                                        <Button disabled={s.status !== 'submitted'}>Review submission</Button>
-                                    </Link>
+                                    {s.status === 'submitted' && (
+                                        <Link href={`/dashboard/review/${s.id}`}>
+                                            <Button>Review submission</Button>
+                                        </Link>
+                                    )}
+                                    {s.status === 'graded' && (
+                                        <span className="text-sm font-medium">
+                                            Graded:
+                                            <span className="text-muted-foreground">
+                                                {` ${getCreatedAtSubDays(s.graded_at)}`}
+                                            </span>
+                                        </span>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>

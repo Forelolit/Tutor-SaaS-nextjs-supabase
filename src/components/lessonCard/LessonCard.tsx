@@ -1,3 +1,4 @@
+import { getCreatedAtSubDays } from '@/lib/helpers/getCreatedAtSubDays';
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 
 interface LessonProps {
@@ -18,7 +19,7 @@ export const LessonCard = ({ title, description, created_at }: LessonProps) => {
                 <p>Card Content</p>
             </CardContent>
             <CardFooter>
-                <p>Created: {created_at}</p>
+                <p>Created: {getCreatedAtSubDays(created_at)}</p>
             </CardFooter>
         </Card>
     );

@@ -17,6 +17,7 @@ export { Badge } from './ui/badge';
 export { Textarea } from './ui/textarea';
 export * from './ui/avatar';
 export { Toaster } from './ui/sonner';
+export { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 export { EmptyLesson } from './emptyLesson/EmptyLesson';
 export { LessonCard } from './lessonCard/LessonCard';

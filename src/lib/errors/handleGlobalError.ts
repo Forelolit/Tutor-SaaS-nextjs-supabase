@@ -1,5 +1,13 @@
 import { toast } from 'sonner';
-import { UnauthorizedError, ForbiddenError, NetworkError, UnknownError } from './errors';
+import {
+    UnauthorizedError,
+    ForbiddenError,
+    NetworkError,
+    UnknownError,
+    ConstraintError,
+    UserAlreadyExistsError,
+    ValidationError,
+} from './errors';
 
 export function handleGlobalError(error: Error) {
     if (error instanceof UnauthorizedError) {
@@ -17,7 +25,22 @@ export function handleGlobalError(error: Error) {
         return;
     }
 
+    if (error instanceof ConstraintError) {
+        toast.error('Constraint violation!');
+        return;
+    }
+
+    if (error instanceof UserAlreadyExistsError) {
+        toast.error('User already exists!');
+        return;
+    }
+
+    if (error instanceof ValidationError) {
+        toast.error('Only unique value!');
+        return;
+    }
+
     if (error instanceof UnknownError) {
-        toast.error('Something went wrong!');
+        console.error('UNHANDLED ERROR:', error);
     }
 }

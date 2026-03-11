@@ -1,18 +1,20 @@
 'use client';
 
-import { useLessonsStore } from '@/stores/lessons/useLessonsStore';
 import { useUserStore } from '@/stores';
 import { TeacherDashboard } from './(teacherDashboard)/TeacherDashboard';
 import { StudentDashboard } from './(studentDashboard)/StudentDashboard';
+import { useGetLessons } from './action';
+import Loading from './loading';
 
 const DashboardPage = () => {
-    const lessons = useLessonsStore((state) => state.lessons);
     const role = useUserStore((state) => state.user?.role);
+    const { data: lessons, isLoading } = useGetLessons();
 
     return (
         <>
-            {role === 'teacher' && <TeacherDashboard lessons={lessons} />}
-            {role === 'student' && <StudentDashboard lessons={lessons} />}
+            {isLoading && <Loading />}
+            {role === 'teacher' && lessons && !isLoading && <TeacherDashboard lessons={lessons} />}
+            {role === 'student' && lessons && !isLoading && <StudentDashboard lessons={lessons} />}
         </>
     );
 };

@@ -1,10 +1,10 @@
 import { Button, Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components';
-import { ArrowUpRightIcon, BookMarked } from 'lucide-react';
+import { BookMarked } from 'lucide-react';
 import Link from 'next/link';
 
 export const EmptyLesson = () => {
     return (
-        <Empty>
+        <Empty className="w-fit border">
             <EmptyHeader>
                 <EmptyMedia variant="icon">
                     <BookMarked />
@@ -19,11 +19,6 @@ export const EmptyLesson = () => {
                     <Button>Create Project</Button>
                 </Link>
             </EmptyContent>
-            <Button variant="link" asChild className="text-muted-foreground" size="sm">
-                <Link href={'#'}>
-                    Learn More <ArrowUpRightIcon />
-                </Link>
-            </Button>
         </Empty>
     );
 };

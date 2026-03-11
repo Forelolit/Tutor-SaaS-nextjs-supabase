@@ -1,4 +1,3 @@
-import { InviteData } from '@/types/inviteData';
 import { Trash2 } from 'lucide-react';
 import {
     Button,
@@ -11,20 +10,27 @@ import {
     CardTitle,
     Separator,
 } from '@/components';
+import { student_lesson_invites_view } from '@/types/inviteView';
+import { getCreatedAtSubDays } from '@/lib/helpers/getCreatedAtSubDays';
 
 interface InviteCardProps {
     className?: string;
-    invite: InviteData;
+    invite: student_lesson_invites_view;
     deleteInvite?: () => void;
     acceptInvite?: () => void;
 }
 
-export const InviteCard = ({ className = '', invite, deleteInvite, acceptInvite }: InviteCardProps) => {
+export const InviteCard = ({
+    className = '',
+    invite: { title, description, created_at },
+    deleteInvite,
+    acceptInvite,
+}: InviteCardProps) => {
     return (
-        <Card className={className} key={invite.id}>
+        <Card className={className}>
             <CardHeader>
-                <CardTitle>Lesson id: {invite.lesson_id}</CardTitle>
-                <CardDescription>Created by: {invite.created_by}</CardDescription>
+                <CardTitle>Lesson: {title}</CardTitle>
+                <CardDescription>{description}</CardDescription>
                 {deleteInvite && (
                     <CardAction>
                         <Button variant={'destructive'} onClick={deleteInvite}>
@@ -33,10 +39,7 @@ export const InviteCard = ({ className = '', invite, deleteInvite, acceptInvite 
                     </CardAction>
                 )}
             </CardHeader>
-            <CardContent>
-                <div>Invited email: {invite.invited_email}</div>
-                <div>Created at: {invite.created_at}</div>
-            </CardContent>
+            <CardContent>Invite created: {getCreatedAtSubDays(created_at)} </CardContent>
             {acceptInvite && (
                 <>
                     <Separator />

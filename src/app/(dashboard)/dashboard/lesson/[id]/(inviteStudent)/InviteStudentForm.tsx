@@ -1,34 +1,37 @@
 'use client';
 
-import { Button, Input, Label } from '@/components';
+import { Button, Input, Label, Spinner } from '@/components';
 import { useState } from 'react';
 import { createInvite } from './action';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export const InviteStudentForm = ({ lessonId }: { lessonId: string }) => {
     const [email, setEmail] = useState('');
-    const sendInvite = async () => {
-        const res = await createInvite(lessonId, email);
-        if (res.error) {
-            return;
-        }
-        alert('Invite created!');
+    const { mutate, isPending } = useMutation({
+        mutationFn: createInvite,
+        onSuccess: () => {
+            toast.success('Student invited!');
+        },
+    });
+
+    const sendInvite = () => {
+        mutate({ lessonId, email });
         setEmail('');
     };
 
     return (
-        <div className="border border-neutral-800 p-8 rounded-2xl overflow-hidden w-full max-w-125">
-            <form className="flex flex-col gap-2">
-                <Label>Email is required</Label>
-                <Input
-                    autoComplete="email"
-                    placeholder="Students email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <Button type="button" disabled={email.trim() === ''} onClick={sendInvite}>
-                    Send invite
-                </Button>
-            </form>
-        </div>
+        <form className="w-full grid gap-2">
+            <Label>Email is required</Label>
+            <Input
+                autoComplete="email"
+                placeholder="Students email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+            />
+            <Button type="button" disabled={email.trim() === '' || isPending} onClick={sendInvite}>
+                {isPending ? <Spinner /> : 'Send invite'}
+            </Button>
+        </form>
     );
 };

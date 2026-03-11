@@ -8,5 +8,9 @@ export default function LoginGoogleButton() {
         await googleSignIn();
     };
 
-    return <Button onClick={signInHandler}>Login with Google</Button>;
+    return (
+        <Button onClick={signInHandler} variant={'secondary'}>
+            Login with Google
+        </Button>
+    );
 }

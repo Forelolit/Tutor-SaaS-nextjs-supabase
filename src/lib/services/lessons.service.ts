@@ -2,9 +2,6 @@ import { supabase } from '@/lib/supabase/client';
 import { useLessonsStore } from '@/stores/lessons/useLessonsStore';
 
 export const initLessonsListener = async () => {
-    const lessons = useLessonsStore.getState().lessons;
-
-    if (lessons?.length) return console.log('Lessons already exists');
     await fetchAndStoreLessons();
 };
 

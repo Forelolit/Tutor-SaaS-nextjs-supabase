@@ -6,44 +6,60 @@ import {
     ValidationError,
     NetworkError,
     UnknownError,
+    ConstraintError,
+    UserAlreadyExistsError,
 } from './errors';
 
 interface SupabaseError {
-    code: PostgrestError['code'];
-    message: PostgrestError['message'];
-    status: number;
+    code?: PostgrestError['code'];
+    message?: PostgrestError['message'];
+    status?: number;
 }
 
-export function normalizeError(error: SupabaseError) {
+export function normalizeError(error: SupabaseError | null) {
+    console.error('RAW ERROR:', error);
+
     if (!error) return new UnknownError();
 
-    if (error.code === 'PGRST301') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const err = error as any;
+
+    const code = err.code;
+    const message = err.message;
+    const status = err.status;
+
+    if (!error) return new UnknownError();
+
+    //Supabase errors
+
+    if (code === 'PGRST301' || status === 401) {
         return new UnauthorizedError();
     }
 
-    if (error.code === '42501') {
+    if (code === '42501' || status === 403) {
         return new ForbiddenError();
     }
 
-    if (error.code === '23505') {
-        return new ValidationError('Duplicate value');
-    }
-
-    if (error.message === 'Failed to fetch') {
-        return new NetworkError();
-    }
-
-    if (error.status === 401) {
-        return new UnauthorizedError();
-    }
-
-    if (error.status === 403) {
-        return new ForbiddenError();
-    }
-
-    if (error.status === 404) {
+    if (code === 'PGRST116' || status === 404) {
         return new NotFoundError();
     }
 
-    return new UnknownError();
+    if (code === '23505') {
+        return new ValidationError('Duplicate value');
+    }
+
+    if (code === '23514') {
+        return new ConstraintError();
+    }
+
+    if (code === 'user_already_exists') {
+        return new UserAlreadyExistsError();
+    }
+    //Http errors
+
+    if (message === 'Failed to fetch' || message?.includes('NetworkError')) {
+        return new NetworkError();
+    }
+
+    return new UnknownError(error);
 }
