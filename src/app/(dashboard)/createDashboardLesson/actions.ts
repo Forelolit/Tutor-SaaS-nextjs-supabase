@@ -11,6 +11,7 @@ export const createLesson = async ({
     description: string;
 }): Promise<LessonData> => {
     const user = await getCurrentUser();
+    
     return dbQuery(
         supabase
             .from('lessons')

@@ -36,7 +36,7 @@ export const getLessonStudents = async (lesson_id: string): Promise<studentData[
     const lessonStudents = await dbQuery(supabase.from('lesson_students').select('*').eq('lesson_id', lesson_id));
 
     const usersPromises = lessonStudents.map(async (data: LessonStudentsData) => {
-        const res = await dbQuery(
+        const res = await dbQuery<studentData>(
             supabase.from('profiles').select('id, first_name, last_name').eq('id', data.student_id).single(),
         );
         return res;

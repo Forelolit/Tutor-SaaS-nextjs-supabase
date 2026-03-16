@@ -1,4 +1,4 @@
-import { dbQuery } from '@/lib/helpers/dbQuery';
+import { authQuery } from '@/lib/helpers/authQuery';
 import { putUserInStore } from '@/lib/services/user.service';
 import { supabase } from '@/lib/supabase/client';
 
@@ -11,7 +11,7 @@ interface userSignUpData {
 }
 
 export const signUp = async ({ firstname, lastname, email, userRole, password }: userSignUpData) => {
-    const data = await dbQuery(
+    const data = await authQuery(
         supabase.auth.signUp({
             email,
             password,
@@ -25,7 +25,7 @@ export const signUp = async ({ firstname, lastname, email, userRole, password }:
         }),
     );
 
-    if (data.session.access_token !== '' || null) {
+    if (data.session?.access_token) {
         putUserInStore();
     }
 };

@@ -14,6 +14,7 @@ export const createInvite = async ({ lessonId, email }: { lessonId: string; emai
                 invited_email: email,
                 created_by: user.id,
             })
-            .select(),
+            .select()
+            .single(),
     );
 };

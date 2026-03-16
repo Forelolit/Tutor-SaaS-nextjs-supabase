@@ -1,6 +1,7 @@
 import { dbQuery } from '@/lib/helpers/dbQuery';
 import { getCurrentUser } from '@/lib/helpers/getCurrentUser';
 import { supabase } from '@/lib/supabase/client';
+import { InviteData } from '@/types/inviteData';
 import { student_lesson_invites_view } from '@/types/inviteView';
 import { useQuery } from '@tanstack/react-query';
 
@@ -18,7 +19,7 @@ export const useGetInvites = () => {
 export const acceptInvite = async ({ token }: { token: string }) => {
     const user = await getCurrentUser();
 
-    const invite = await dbQuery(
+    const invite = await dbQuery<InviteData>(
         supabase.from('lesson_invites').select('*').eq('token', token).is('used_at', null).single(),
     );
 

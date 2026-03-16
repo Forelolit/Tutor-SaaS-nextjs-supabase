@@ -11,11 +11,15 @@ export const createSubmission = async ({
     answer: string;
 }): Promise<student_submissions_view> => {
     const user = await getCurrentUser();
+
     return dbQuery(
-        supabase.from('task_submissions').insert({
-            student_id: user.id,
-            task_id: taskId,
-            content: answer,
-        }),
+        supabase
+            .from('task_submissions')
+            .insert({
+                student_id: user.id,
+                task_id: taskId,
+                content: answer,
+            })
+            .single(),
     );
 };
